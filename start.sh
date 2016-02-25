@@ -26,7 +26,7 @@ RUN yum install python-setuptools -y
 RUN easy_install pip
 RUN pip install shadowsocks
 EXPOSE 443
-CMD ["ssserver -p 443 -k ${passwd} -m aes-256-cfb"]
+CMD ["ssserver","-p 443 -k ${passwd} -m aes-256-cfb"]
 _EOF_
 
 cf ic build -t ss:v1 .
@@ -35,5 +35,5 @@ cf ic build -t ss:v1 .
 cf ic run --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1
 
 # 显示信息
-echo "password:\n"${passwd}"\naddress:"
-cf ic ps | grep ss | awk '{print $10}'
+echo -e "password:\n"${passwd}"\naddress:"
+cf ic inspect ss | grep ip
