@@ -38,5 +38,5 @@ cf ic run --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1
 # 显示信息
 sleep 30
 clear
-echo -e "password:\n"${passwd}"\naddress:"
+echo -e "password:\n"${passwd}"\nIP:"
 cf ic inspect ss | grep PublicIpAddress | awk -F\" '{print $4}'
