@@ -32,7 +32,7 @@ _EOF_
 cf ic build -t ss:v1 .
 
 # 运行容器
-cf ic run --name=ss -d -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1
+cf ic run --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1
 
 # 显示信息
 echo "password:\n"${passwd}"\naddress:"
