@@ -26,7 +26,7 @@ RUN yum install python-setuptools -y
 RUN easy_install pip
 RUN pip install shadowsocks
 EXPOSE 443
-CMD ["ssserver","-p 443 -k ${passwd} -m aes-256-cfb"]
+CMD ["ssserver","-p","443","-k","+5Vr5zzp+/36g52O","-m","aes-256-cfb"]
 _EOF_
 
 cf ic build -t ss:v1 .
