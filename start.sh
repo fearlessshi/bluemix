@@ -1,7 +1,25 @@
 #!/bin/bash
 
-# 安装依赖
+# 修正 Coding 的 Ubuntu 源错误
+echo 'deb http://au.archive.ubuntu.com/ubuntu/ wily main restricted' | sudo tee /etc/apt/sources.list
+echo 'deb http://au.archive.ubuntu.com/ubuntu/ wily-updates main restricted' | sudo tee -a /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install --only-upgrade apt -y
+cat << _EOF_ | sudo tee /etc/apt/sources.list
+deb http://mirrors.163.com/ubuntu/ wily main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ wily-security main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ wily-updates main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ wily-proposed main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ wily-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ wily main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ wily-security main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ wily-updates main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ wily-proposed main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ wily-backports main restricted universe multiverse
+_EOF_
+sudo apt-get update
 
+# 安装依赖
 sudo apt-get update 
 sudo apt-get install docker.io wget -y 
 
