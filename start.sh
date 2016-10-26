@@ -20,17 +20,27 @@ _EOF_
 sudo apt-get update
 
 # 安装依赖
-sudo apt-get update 
 sudo apt-get install docker.io wget -y 
 
 wget -O cf.deb 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/cf-cli-installer_6.16.0_x86-64.deb' 
 sudo dpkg -i cf.deb 
 
-cf install-plugin -f https://coding.net/u/tprss/p/bluemix-source/git/raw/master/ibm-containers-linux_x64 
+cf install-plugin -f https://coding.net/u/tprss/p/bluemix-source/git/raw/master/ibm-containers-linux_x64
+
+wget 'http://public.dhe.ibm.com/cloud/bluemix/cli/bluemix-cli/Bluemix_CLI_0.4.3_amd64.tar.gz'
+tar -zxf Bluemix_CLI_0.4.3_amd64.tar.gz
+cd Bluemix_CLI
+sudo ./install_bluemix_cli
+cd ..
 
 # 初始化环境
+org=$(openssl rand -base64 8 | md5sum | head -c8)
 cf login -a https://api.ng.bluemix.net
-cf ic init 
+bx iam org-create $org
+bx iam space-create dev
+cf target -o $org -s dev
+cf ic namespace set $(openssl rand -base64 8 | md5sum | head -c8)
+cf ic init
 
 # 生成密码
 passwd=`openssl rand -base64 12`
