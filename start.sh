@@ -37,10 +37,13 @@ cd ..
 org=$(openssl rand -base64 8 | md5sum | head -c8)
 cf login -a https://api.ng.bluemix.net
 bx iam org-create $org
+sleep 3
 cf target -o $org
 bx iam space-create dev
+sleep 3
 cf target -s dev
 cf ic namespace set $(openssl rand -base64 8 | md5sum | head -c8)
+sleep 3
 cf ic init
 
 # 生成密码
