@@ -27,7 +27,7 @@ sudo dpkg -i cf.deb
 
 cf install-plugin -f https://coding.net/u/tprss/p/bluemix-source/git/raw/master/ibm-containers-linux_x64
 
-wget 'http://public.dhe.ibm.com/cloud/bluemix/cli/bluemix-cli/Bluemix_CLI_0.4.3_amd64.tar.gz'
+wget 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/Bluemix_CLI_0.4.3_amd64.tar.gz'
 tar -zxf Bluemix_CLI_0.4.3_amd64.tar.gz
 cd Bluemix_CLI
 sudo ./install_bluemix_cli
