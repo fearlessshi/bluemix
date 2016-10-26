@@ -37,8 +37,9 @@ cd ..
 org=$(openssl rand -base64 8 | md5sum | head -c8)
 cf login -a https://api.ng.bluemix.net
 bx iam org-create $org
+cf target -o $org
 bx iam space-create dev
-cf target -o $org -s dev
+cf target -s dev
 cf ic namespace set $(openssl rand -base64 8 | md5sum | head -c8)
 cf ic init
 
@@ -61,7 +62,7 @@ _EOF_
 cf ic build -t ss:v1 . 
 
 # 运行容器
-cf ic run --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1
+cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1)
 
 # 显示信息
 sleep 30
