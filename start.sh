@@ -20,7 +20,7 @@ _EOF_
 sudo apt-get update
 
 # 安装依赖
-sudo apt-get install docker.io wget fortune cowsay lolcat -y 
+sudo apt-get install docker.io wget cowsay -y 
 
 wget -O cf.deb 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/cf-cli-installer_6.16.0_x86-64.deb' 
 sudo dpkg -i cf.deb 
@@ -102,7 +102,6 @@ cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run --name=
 # 显示信息
 sleep 30
 clear
-fortune | cowsay | lolcat
-echo -e "\n\nIP:"
+echo $(echo -e "IP:"
 cf ic inspect ss | grep PublicIpAddress | awk -F\" '{print $4}'
-echo -e "Password:\n"${passwd}"\nPort:\n443\nMethod:\nAES-256-CFB"
+echo -e "\nPassword:\n"${passwd}"\nPort:\n443\nMethod:\nAES-256-CFB") | /usr/games/cowsay -n
