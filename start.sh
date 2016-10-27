@@ -96,6 +96,7 @@ RUN chmod +x /usr/local/bin/server_linux_amd64
 ADD supervisor.sh /tmp/supervisor.sh
 RUN bash /tmp/supervisor.sh
 EXPOSE 443
+EXPOSE 443/udp
 EXPOSE 3306/udp
 CMD ["supervisord", "-nc", "/etc/supervisord.conf"]
 _EOF_
@@ -103,7 +104,7 @@ _EOF_
 cf ic build -t ss:v1 . 
 
 # 运行容器
-cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run -m 1024 --name=ss -p 443 -p 3306/udp registry.ng.bluemix.net/`cf ic namespace get`/ss:v1)
+cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run -m 1024 --name=ss -p 443 -p 443/udp -p 3306/udp registry.ng.bluemix.net/`cf ic namespace get`/ss:v1)
 
 # 显示信息
 for i in {1..6}
