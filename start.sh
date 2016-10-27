@@ -20,7 +20,7 @@ _EOF_
 sudo apt-get update
 
 # 安装依赖
-sudo apt-get install docker.io wget fortune cowsay socat -y 
+sudo apt-get install docker.io wget fortune cowsay -y 
 
 wget -O cf.deb 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/cf-cli-installer_6.16.0_x86-64.deb' 
 sudo dpkg -i cf.deb 
@@ -88,7 +88,7 @@ _EOF2_
 
 cat << _EOF_ >Dockerfile
 FROM centos:centos7
-RUN yum install python-setuptools -y
+RUN yum install python-setuptools socat -y
 RUN easy_install pip
 RUN pip install shadowsocks
 ADD server_linux_amd64 /usr/local/bin/server_linux_amd64
