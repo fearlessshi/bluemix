@@ -96,7 +96,7 @@ RUN chmod +x /usr/local/bin/server_linux_amd64
 ADD supervisor.sh /tmp/supervisor.sh
 RUN bash /tmp/supervisor.sh
 EXPOSE 443
-EXPOSE 3306
+EXPOSE 3306/udp
 CMD ["supervisord", "-nc", "/etc/supervisord.conf"]
 _EOF_
 
