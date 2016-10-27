@@ -81,7 +81,7 @@ _EOF2_
 
 
 cat << _EOF_ >Dockerfile
-FROM daocloud.io/library/centos:centos7
+FROM centos:centos7
 RUN yum install python-setuptools -y
 RUN easy_install pip
 RUN pip install shadowsocks
