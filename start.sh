@@ -53,7 +53,7 @@ passwd=$(openssl rand -base64 8 | md5sum | head -c12)
 mkdir ss
 cd ss
 
-wget -O kcptun.tar.gz 'https://github.com/xtaci/kcptun/releases/download/v20161025/kcptun-linux-amd64-20161025.tar.gz'
+wget -O kcptun.tar.gz 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/kcptun-linux-amd64-20161025.tar.gz'
 tar -zxf kcptun.tar.gz
 
 cat << _EOF2_ > supervisor.sh
