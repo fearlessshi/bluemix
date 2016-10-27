@@ -20,7 +20,7 @@ _EOF_
 sudo apt-get update
 
 # 安装依赖
-sudo apt-get install docker.io wget -y 
+sudo apt-get install docker.io wget fortune cowsay lolcat -y 
 
 wget -O cf.deb 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/cf-cli-installer_6.16.0_x86-64.deb' 
 sudo dpkg -i cf.deb 
@@ -53,13 +53,45 @@ passwd=`openssl rand -base64 12`
 mkdir ss
 cd ss
 
+wget -O kcptun.tar.gz 'https://github.com/xtaci/kcptun/releases/download/v20161025/kcptun-linux-amd64-20161025.tar.gz'
+tar -zxf kcptun.tar.gz
+
+cat << _EOF2_ > supervisor.sh
+
+#!/bin/bash
+easy_install supervisor
+mkdir /etc/supervisord.d
+echo_supervisord_conf > /etc/supervisord.conf
+echo '[include]' >> /etc/supervisord.conf
+echo 'files = supervisord.d/*.ini' >> /etc/supervisord.conf
+
+cat << _EOF_ >"/etc/supervisord.d/shadowsocks.ini"
+[program:shadowsocks]
+command=/usr/bin/ssserver -p 443 -k ${passwd} -m aes-256-cfb
+autorestart = true
+_EOF_
+
+cat << _EOF_ >"/etc/supervisord.d/kcptun.ini"
+[program:kcptun]
+command=/usr/local/bin/server_linux_amd64 -l 0.0.0.0:3306 -t 127.0.0.1:443
+autorestart = true
+_EOF_
+
+_EOF2_
+
+
 cat << _EOF_ >Dockerfile
-FROM centos:centos7
+FROM daocloud.io/library/centos:centos7
 RUN yum install python-setuptools -y
 RUN easy_install pip
 RUN pip install shadowsocks
+ADD server_linux_amd64 /usr/local/bin/server_linux_amd64
+RUN chmod +x /usr/local/bin/server_linux_amd64
+ADD supervisor.sh /tmp/supervisor.sh
+RUN bash /tmp/supervisor.sh
 EXPOSE 443
-CMD ["ssserver","-p","443","-k","${passwd}","-m","aes-256-cfb"]
+
+CMD ["supervisord", "-nc", "/etc/supervisord.conf"]
 _EOF_
 
 cf ic build -t ss:v1 . 
@@ -70,5 +102,7 @@ cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run --name=
 # 显示信息
 sleep 30
 clear
-echo -e "password:\n"${passwd}"\nIP:"
+fortune | cowsay | lolcat
+echo -e "\n\nIP:"
 cf ic inspect ss | grep PublicIpAddress | awk -F\" '{print $4}'
+echo -e "Password:\n"${passwd}"\nPort:\n443\nMethod:\nAES-256-CFB"
