@@ -20,7 +20,7 @@ _EOF_
 sudo apt-get update
 
 # 安装依赖
-sudo apt-get install docker.io wget cowsay -y 
+sudo apt-get install docker.io wget fortune cowsay socat -y 
 
 wget -O cf.deb 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/cf-cli-installer_6.16.0_x86-64.deb' 
 sudo dpkg -i cf.deb 
@@ -47,7 +47,7 @@ sleep 3
 cf ic init
 
 # 生成密码
-passwd=`openssl rand -base64 12`
+passwd=$(openssl rand -base64 8 | md5sum | head -c12)
 
 # 创建镜像
 mkdir ss
@@ -73,7 +73,13 @@ _EOF_
 
 cat << _EOF_ >"/etc/supervisord.d/kcptun.ini"
 [program:kcptun]
-command=/usr/local/bin/server_linux_amd64 -l 0.0.0.0:3306 -t 127.0.0.1:443
+command=/usr/local/bin/server_linux_amd64 -l 127.0.0.1:29000 -t 127.0.0.1:443
+autorestart = true
+_EOF_
+
+cat << _EOF_ >"/etc/supervisord.d/socat.ini"
+[program:socat]
+command=/usr/bin/socat UDP4-LISTEN:3306,reuseaddr,fork,su=nobody UDP4:127.0.0.1:29000
 autorestart = true
 _EOF_
 
@@ -97,10 +103,14 @@ _EOF_
 cf ic build -t ss:v1 . 
 
 # 运行容器
-cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run -m 1024 --name=ss -p 443 registry.ng.bluemix.net/`cf ic namespace get`/ss:v1)
+cf ic ip bind $(cf ic ip request | cut -d \" -f 2 | tail -1) $(cf ic run -m 1024 --name=ss -p 443 -p 3306/udp registry.ng.bluemix.net/`cf ic namespace get`/ss:v1)
 
 # 显示信息
-sleep 30
+for i in {1..6}
+do
+	/usr/games/fortune
+	sleep 10
+done
 clear
 echo $(echo -e "IP:"
 cf ic inspect ss | grep PublicIpAddress | awk -F\" '{print $4}'
