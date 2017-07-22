@@ -21,11 +21,11 @@ unzip container-service-linux-amd64.zip
 bx plugin install ./container-service-linux-amd64
 
 # 初始化
-echo -n '请输入用户名：'
+echo -e -n "\n请输入用户名："
 read USERNAME
 echo -n '请输入密码：'
 read -s PASSWD
-echo ''
+echo -e '\n'
 (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
