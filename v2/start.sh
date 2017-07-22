@@ -18,6 +18,7 @@ echo -n '请输入用户名：'
 read USERNAME
 echo -n '请输入密码：'
 read -s PASSWD
+echo ''
 (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
