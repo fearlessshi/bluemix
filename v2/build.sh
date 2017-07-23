@@ -51,6 +51,6 @@ RUN kubectl get nodes
 CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
 _EOF_
 docker build -t kube:v1 .
-kubectl run kube –image=kube:v1 –port=8001 –hostport=80
+kubectl run kube --image=kube:v1 --port=8001 --hostport=80
 
 # 创建面板运行环境
