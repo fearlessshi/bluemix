@@ -36,12 +36,17 @@ $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | gr
 kubectl get nodes
 
 # 构建面板容器
+cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
+cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
+PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
 RUN apk add --update curl
 RUN curl -Lo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 RUN chmod +x /usr/local/bin/kubectl
-ADD 
+RUN mkdir /root/.kube
+ADD config /root/.kube/config
+ADD $PEM /root/.kube/
 RUN kubectl get nodes
 CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
 _EOF_
