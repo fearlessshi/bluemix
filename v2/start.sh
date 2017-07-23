@@ -30,3 +30,22 @@ echo -e '\n'
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 kubectl get nodes
+
+# 创建构建环境
+cat << _EOF_ > build.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: build
+spec:
+  containers:
+  - name: centos
+    image: centos:centos7
+    command: ["sleep"]
+    args: ["600"]
+    securityContext:
+      privileged: true
+_EOF_
+kubectl create -f build.yaml
+sleep 3
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD) | kubectl run -it build /bin/bash
