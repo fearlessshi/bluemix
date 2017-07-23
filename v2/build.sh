@@ -37,8 +37,7 @@ kubectl get nodes
 
 # 构建面板容器
 cat << _EOF_ > Dockerfile
-FROM alpine:latest
-RUN apk add --update curl
+FROM centos:centos7
 RUN curl -Lo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 RUN curl -Lo Bluemix_CLI_0.5.5_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.5.5/linux64'; tar -zxf Bluemix_CLI_0.5.5_amd64.tar.gz; cd Bluemix_CLI; ./install_bluemix_cli; cd ..; rm -rf  Bluemix_CLI*
