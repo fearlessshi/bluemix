@@ -40,7 +40,16 @@ cat << _EOF_ > Dockerfile
 FROM alpine:latest
 RUN curl -Lo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 RUN chmod +x /usr/local/bin/kubectl
-RUN curl -Lo Bluemix_CLI_0.5.5_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.5.5/linux64'; tar -zxf Bluemix_CLI_0.5.5_amd64.tar.gz; cd Bluemix_CLI; ./install_bluemix_cli; cd ..; rm -rf  Bluemix_CLI
-RUN 
+RUN curl -Lo Bluemix_CLI_0.5.5_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.5.5/linux64'; tar -zxf Bluemix_CLI_0.5.5_amd64.tar.gz; cd Bluemix_CLI; ./install_bluemix_cli; cd ..; rm -rf  Bluemix_CLI*
+RUN bluemix config --usage-stats-collect false
+RUN bx plugin install container-service -r Bluemix
+RUN (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
+RUN bx cs init
+RUN $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
+RUN kubectl get nodes
+CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
+_EOF_
+docker build -t kube:v1 .
+kubectl run kube –image=kube:v1 –port=8001 –hostport=80
 
 # 创建面板运行环境
