@@ -45,6 +45,7 @@ spec:
     args: ["600"]
     securityContext:
       privileged: true
+  restartPolicy: Never
 _EOF_
 kubectl create -f build.yaml
 sleep 3
