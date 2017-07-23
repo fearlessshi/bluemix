@@ -17,7 +17,7 @@ docker ps
 # 安装 kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
+mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
 wget -O Bluemix_CLI_0.5.5_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.5.5/linux64'
