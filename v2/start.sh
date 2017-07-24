@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 安装 unzip
-wget http://git.oschina.net/znxe7oyjp/znxe7oyjp/raw/master/unzip
-chmod +x ./unzip
-sudo mv ./unzip /usr/bin/
+wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
+chmod +x ./unrar
+sudo mv ./unrar /usr/bin/
 
 # 安装 kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -11,13 +11,13 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
-wget 'http://git.oschina.net/znxe7oyjp/znxe7oyjp/raw/master/Bluemix_CLI.zip' #0.5.5
-unzip Bluemix_CLI.zip
+wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/5e3d1568-d4be-43ac-9196-3be430b82aec' #0.5.5
+unrar x Bluemix_CLI.rar
 cd Bluemix_CLI
 sudo ./install_bluemix_cli
 bluemix config --usage-stats-collect false
-wget http://git.oschina.net/znxe7oyjp/znxe7oyjp/raw/master/container-service-linux-amd64.zip
-unzip container-service-linux-amd64.zip
+wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1bc1657f-5979-4c96-9d13-5c1b289c84a5'
+unrar container-service-linux-amd64.rar
 bx plugin install ./container-service-linux-amd64
 
 # 初始化
