@@ -6,7 +6,7 @@ chmod +x ./unrar
 sudo mv ./unrar /usr/bin/
 
 # 安装 kubectl
-curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.7.2/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
@@ -49,4 +49,4 @@ spec:
 _EOF_
 kubectl create -f build.yaml
 sleep 3
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo 'bash build.sh $USERNAME $PASSWD &'; echo exit) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo 'bash build.sh $USERNAME $PASSWD') | kubectl exec -it build /bin/bash
