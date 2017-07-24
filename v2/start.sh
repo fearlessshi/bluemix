@@ -17,7 +17,7 @@ cd Bluemix_CLI
 sudo ./install_bluemix_cli
 bluemix config --usage-stats-collect false
 wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1bc1657f-5979-4c96-9d13-5c1b289c84a5'
-unrar container-service-linux-amd64.rar
+unrar x container-service-linux-amd64.rar
 bx plugin install ./container-service-linux-amd64
 
 # 初始化
