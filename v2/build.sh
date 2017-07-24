@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 安装 docker
-yum install -y yum-utils device-mapper-persistent-data lvm2 wget
+yum install -y yum-utils device-mapper-persistent-data lvm2 wget openssl
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum install docker-ce -y
 dockerd >/dev/null 2>&1 &
@@ -32,7 +32,7 @@ kubectl get nodes
 # 构建面板容器
 bx plugin install container-registry -r Bluemix
 bx cr login
-NS=$(openssl rand -base64 8 | md5sum | head -c8)
+NS=$(openssl rand -base64 16 | md5sum | head -c8)
 bx cr namespace-add $NS
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
