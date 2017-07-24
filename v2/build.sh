@@ -9,6 +9,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
+sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 yum install docker-engine wget -y
 dockerd >/dev/null 2>&1 &
 sleep 3
