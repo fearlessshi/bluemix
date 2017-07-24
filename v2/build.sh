@@ -46,7 +46,7 @@ RUN mkdir /root/.kube
 ADD config /root/.kube/config
 ADD $PEM /root/.kube/
 RUN kubectl get nodes
-CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*' --password 123456
+CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
 _EOF_
 docker build -t registry.ng.bluemix.net/$NS/kube .
 docker push registry.ng.bluemix.net/$NS/kube
