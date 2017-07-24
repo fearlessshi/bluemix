@@ -49,4 +49,4 @@ spec:
 _EOF_
 kubectl create -f build.yaml
 sleep 3
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo 'bash build.sh $USERNAME $PASSWD &'; echo exit) | kubectl exec -it build /bin/bash
