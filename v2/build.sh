@@ -32,7 +32,7 @@ kubectl get nodes
 # 构建面板容器
 bx plugin install container-registry -r Bluemix
 bx cr login
-NS=$(openssl rand -base64 16 | md5sum | head -c8)
+NS=$(openssl rand -base64 16 | md5sum | head -c16)
 bx cr namespace-add $NS
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
