@@ -52,7 +52,7 @@ docker build -t registry.ng.bluemix.net/$NS/kube .
 docker push registry.ng.bluemix.net/$NS/kube
 
 # 创建面板运行环境
-kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8001 --hostport=80 --expose=true
+kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8001 --expose=true
 
 # 删除构建环境
 kubectl delete pod build
