@@ -36,6 +36,10 @@ $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | gr
 kubectl get nodes
 
 # 构建面板容器
+bx plugin install container-registry -r Bluemix
+bx cr login
+NS=$(openssl rand -base64 8 | md5sum | head -c8)
+bx cr namespace-add $NS
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
 PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
@@ -50,7 +54,11 @@ ADD $PEM /root/.kube/
 RUN kubectl get nodes
 CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
 _EOF_
-docker build -t kube:v1 .
-kubectl run kube --image=kube:v1 --port=8001 --hostport=80
+docker build -t registry.ng.bluemix.net/$NS/kube .
+docker push registry.ng.bluemix.net/$NS/kube
 
 # 创建面板运行环境
+kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8001 --hostport=80
+
+# 删除构建环境
+kubectl delete pod build
