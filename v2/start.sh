@@ -42,7 +42,7 @@ spec:
   - name: centos
     image: centos:centos7
     command: ["sleep"]
-    args: ["600"]
+    args: ["1800"]
     securityContext:
       privileged: true
   restartPolicy: Never
