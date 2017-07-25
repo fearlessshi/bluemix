@@ -70,7 +70,7 @@ docker build -t registry.ng.bluemix.net/$NS/kube .
 docker push registry.ng.bluemix.net/$NS/kube
 
 # 创建面板运行环境
-kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8001
+kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8080
 kubectl expose deployment kube --type=NodePort --name=kube
 
 # 构建 SS 容器
