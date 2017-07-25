@@ -56,7 +56,20 @@ sleep 3
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
+wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/cowsay
+chmod +x cowsay
+cat << _EOF_ > default.cow
+\$the_cow = <<"EOC";
+        \$thoughts   ^__^
+         \$thoughts  (\$eyes)\\\\_______
+            (__)\\       )\\\\/\\\\
+             \$tongue ||----w |
+                ||     ||
+EOC
+_EOF_
 clear
+echo
+./cowsay -f default.cow 惊不惊喜，意不意外
 echo 
 echo ' 管理面板地址: ' http://$IP:$PP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
 echo 
