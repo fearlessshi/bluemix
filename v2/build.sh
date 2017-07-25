@@ -53,7 +53,7 @@ proxy /$PPW/ 127.0.0.1:8001
 _EOF_
 
 cat << _EOF_ > run.sh
-kubectl proxy --accept-hosts '.*' &
+kubectl proxy --accept-hosts '.*' --api-prefix=/$PPW/ &
 caddy -conf /etc/caddy/Caddyfile
 _EOF_
 
