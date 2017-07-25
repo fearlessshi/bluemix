@@ -6,7 +6,6 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 yum install docker-ce -y
 dockerd >/dev/null 2>&1 &
 sleep 3
-docker ps
 
 # 安装 kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
