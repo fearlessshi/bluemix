@@ -58,7 +58,7 @@ SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 clear
 echo 
-echo ' 管理面板地址: ' http://$IP:$PP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/#/workload?namespace=default
+echo ' 管理面板地址: ' http://$IP:$PP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
 echo 
 echo ' SS:'
 echo '  IP: '$IP
@@ -69,3 +69,4 @@ ADDR='ss://'$(echo -n "aes-256-cfb:$SPW@$IP:$SP" | base64)
 echo 
 echo '  快速添加: '$ADDR
 echo '  二维码: http://qr.liantu.com/api.php?text='$ADDR
+echo 
