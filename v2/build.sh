@@ -60,7 +60,7 @@ _EOF_
 
 cat << _EOF_ > run.sh
 kubectl proxy --accept-hosts '.*' &
-caddy -c /etc/caddy/Caddyfile
+caddy -conf /etc/caddy/Caddyfile
 _EOF_
 
 cat << _EOF_ > Dockerfile
