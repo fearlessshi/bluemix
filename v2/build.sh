@@ -31,14 +31,21 @@ bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 kubectl get nodes
 
-# 构建面板容器
+# 初始化镜像库
 bx plugin install container-registry -r Bluemix
 bx cr login
 NS=$(openssl rand -base64 16 | md5sum | head -c16)
 bx cr namespace-add $NS
+
+# 构建面板容器
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
 PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
+
+wget -O caddy.tar.gz https://caddyserver.com/download/linux/amd64
+tar -zxf caddy.tar.gz
+chmod +x ./caddy
+
 cat << _EOF_ > Caddyfile
 0.0.0.0:8080
 gzip
@@ -48,24 +55,25 @@ basicauth "admin" $PPW {
 }
 proxy / 127.0.0.1:8001
 _EOF_
+
 cat << _EOF_ > run.sh
 kubectl proxy --accept-hosts '.*' &
 caddy -c /etc/caddy/Caddyfile
 _EOF_
+
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
-RUN apk add --update curl
-RUN curl -Lo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-RUN chmod +x /usr/local/bin/kubectl
+ADD /usr/local/bin/kubectl /usr/local/bin/
 RUN mkdir /root/.kube
 ADD config /root/.kube/config
 ADD $PEM /root/.kube/
-RUN curl https://getcaddy.com | bash
+ADD caddy /usr/local/bin/
 RUN mkdir /etc/caddy
 ADD Caddyfile /etc/caddy/
 ADD run.sh /root/
 CMD sh /root/
 _EOF_
+
 docker build -t registry.ng.bluemix.net/$NS/kube .
 docker push registry.ng.bluemix.net/$NS/kube
 
