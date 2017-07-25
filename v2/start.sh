@@ -29,7 +29,8 @@ echo -e '\n'
 (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
-PW=$(openssl rand -base64 12 | md5sum | head -c12)
+PPW=$(openssl rand -base64 12 | md5sum | head -c12)
+SPW=$(openssl rand -base64 12 | md5sum | head -c12)
 
 # 创建构建环境
 cat << _EOF_ > build.yaml
@@ -49,10 +50,16 @@ spec:
 _EOF_
 kubectl create -f build.yaml
 sleep 3
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PW) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW) | kubectl exec -it build /bin/bash
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 clear
-echo 管理面板地址：http://$IP:$PP/ui/
+echo 管理面板地址：http://admin:$PPW@$IP:$PP/ui/
+echo 
+echo SS:
+echo '  IP:'$IP
+echo '  Port: '$SP
+echo '  Password:'$SPW
+echo '  Method: aes-256-cfb'
