@@ -57,10 +57,11 @@ PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | ta
 SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 clear
-echo 管理面板地址：http://admin:$PPW@$IP:$PP/ui/
 echo 
-echo SS:
-echo '  IP:'$IP
+echo ' 管理面板地址: ' http://admin:$PPW@$IP:$PP/ui/
+echo 
+echo ' SS:'
+echo '  IP: '$IP
 echo '  Port: '$SP
-echo '  Password:'$SPW
+echo '  Password: '$SPW
 echo '  Method: aes-256-cfb'
