@@ -69,7 +69,7 @@ EOC
 _EOF_
 clear
 echo
-./cowsay -f default.cow 惊不惊喜，意不意外
+./cowsay -f ./default.cow 惊不惊喜，意不意外
 echo 
 echo ' 管理面板地址: ' http://$IP:$PP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
 echo 
