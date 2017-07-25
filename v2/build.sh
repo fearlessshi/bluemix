@@ -24,6 +24,8 @@ bx plugin install container-service -r Bluemix
 # 初始化
 USERNAME=$1
 PASSWD=$2
+PPW=$3
+SPW=$4
 (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
@@ -37,6 +39,19 @@ bx cr namespace-add $NS
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
 PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
+cat << _EOF_ > Caddyfile
+0.0.0.0:8080
+gzip
+basicauth "admin" $PPW {
+	realm "kubernetes"
+    /
+}
+proxy / 127.0.0.1:8001
+_EOF_
+cat << _EOF_ > run.sh
+kubectl proxy --accept-hosts '.*' &
+caddy -c /etc/caddy/Caddyfile
+_EOF_
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
 RUN apk add --update curl
@@ -45,8 +60,11 @@ RUN chmod +x /usr/local/bin/kubectl
 RUN mkdir /root/.kube
 ADD config /root/.kube/config
 ADD $PEM /root/.kube/
-RUN kubectl get nodes
-CMD kubectl proxy --address='0.0.0.0' --accept-hosts '.*'
+RUN curl https://getcaddy.com | bash
+RUN mkdir /etc/caddy
+ADD Caddyfile /etc/caddy/
+ADD run.sh /root/
+CMD sh /root/
 _EOF_
 docker build -t registry.ng.bluemix.net/$NS/kube .
 docker push registry.ng.bluemix.net/$NS/kube
@@ -54,6 +72,21 @@ docker push registry.ng.bluemix.net/$NS/kube
 # 创建面板运行环境
 kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8001
 kubectl expose deployment kube --type=NodePort --name=kube
+
+# 构建 SS 容器
+cat << _EOF_ >Dockerfile
+FROM centos:centos7
+RUN yum install python-setuptools -y
+RUN easy_install pip
+RUN pip install shadowsocks
+CMD ["ssserver","-p","443","-k","${SPW}","-m","aes-256-cfb"]
+_EOF_
+docker build -t registry.ng.bluemix.net/$NS/ss .
+docker push registry.ng.bluemix.net/$NS/ss
+
+# 创建 SS 运行环境
+kubectl run kube --image=registry.ng.bluemix.net/$NS/ss --port=443
+kubectl expose deployment kube --type=NodePort --name=ss
 
 # 删除构建环境
 kubectl delete pod build
