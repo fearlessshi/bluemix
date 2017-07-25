@@ -58,7 +58,7 @@ SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 clear
 echo 
-echo ' 管理面板地址: ' http://admin:$PPW@$IP:$PP/ui/
+echo ' 管理面板地址: ' http://$IP:$PP/$PPW/ui/
 echo 
 echo ' SS:'
 echo '  IP: '$IP
