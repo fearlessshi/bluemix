@@ -28,7 +28,6 @@ SPW=$4
 (echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
-kubectl get nodes
 
 # 初始化镜像库
 bx plugin install container-registry -r Bluemix
@@ -50,11 +49,7 @@ cp /usr/local/bin/kubectl ./
 cat << _EOF_ > Caddyfile
 0.0.0.0:8080
 gzip
-basicauth "admin" $PPW {
-	realm "kubernetes"
-    /
-}
-proxy / 127.0.0.1:8001
+proxy /$PPW/ 127.0.0.1:8001
 _EOF_
 
 cat << _EOF_ > run.sh
