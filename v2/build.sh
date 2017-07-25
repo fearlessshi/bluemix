@@ -73,7 +73,7 @@ ADD caddy /usr/local/bin/
 RUN mkdir /etc/caddy
 ADD Caddyfile /etc/caddy/
 ADD run.sh /root/
-CMD sh /root/
+CMD sh /root/run.sh
 _EOF_
 
 docker build -t registry.ng.bluemix.net/$NS/kube .
