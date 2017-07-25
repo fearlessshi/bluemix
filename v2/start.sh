@@ -54,6 +54,7 @@ sleep 3
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
+SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 clear
 echo 管理面板地址：http://admin:$PPW@$IP:$PP/ui/
