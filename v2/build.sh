@@ -85,8 +85,8 @@ docker build -t registry.ng.bluemix.net/$NS/ss .
 docker push registry.ng.bluemix.net/$NS/ss
 
 # 创建 SS 运行环境
-kubectl run kube --image=registry.ng.bluemix.net/$NS/ss --port=443
-kubectl expose deployment kube --type=NodePort --name=ss
+kubectl run ss --image=registry.ng.bluemix.net/$NS/ss --port=443
+kubectl expose deployment ss --type=NodePort --name=ss
 
 # 删除构建环境
 kubectl delete pod build
