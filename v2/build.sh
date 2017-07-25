@@ -46,6 +46,8 @@ wget -O caddy.tar.gz https://caddyserver.com/download/linux/amd64
 tar -zxf caddy.tar.gz
 chmod +x ./caddy
 
+cp /usr/local/bin/kubectl ./
+
 cat << _EOF_ > Caddyfile
 0.0.0.0:8080
 gzip
@@ -63,7 +65,7 @@ _EOF_
 
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
-ADD /usr/local/bin/kubectl /usr/local/bin/
+ADD kubectl /usr/local/bin/
 RUN mkdir /root/.kube
 ADD config /root/.kube/config
 ADD $PEM /root/.kube/
