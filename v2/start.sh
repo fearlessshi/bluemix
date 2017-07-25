@@ -65,3 +65,6 @@ echo '  IP: '$IP
 echo '  Port: '$SP
 echo '  Password: '$SPW
 echo '  Method: aes-256-cfb'
+ADDR='ss://'$(echo -n "aes-256-cfb:$SPW@$IP:$SP" | base64)
+echo '  快速添加: '$ADDR
+echo '  二维码: http://qr.liantu.com/api.php?text='$ADDR
