@@ -71,7 +71,10 @@ CMD sh /root/run.sh
 _EOF_
 
 docker build -t registry.ng.bluemix.net/$NS/kube .
-docker push registry.ng.bluemix.net/$NS/kube
+while ! bx cr image-list | grep -q "registry.ng.bluemix.net/$NS/kube"
+do
+    docker push registry.ng.bluemix.net/$NS/kube
+done
 
 # 创建面板运行环境
 kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8080
@@ -86,7 +89,10 @@ RUN pip install shadowsocks
 CMD ["ssserver","-p","443","-k","${SPW}","-m","aes-256-cfb"]
 _EOF_
 docker build -t registry.ng.bluemix.net/$NS/ss .
-docker push registry.ng.bluemix.net/$NS/ss
+while ! bx cr image-list | grep -q "registry.ng.bluemix.net/$NS/ss"
+do
+    docker push registry.ng.bluemix.net/$NS/ss
+done
 
 # 创建 SS 运行环境
 kubectl run ss --image=registry.ng.bluemix.net/$NS/ss --port=443
