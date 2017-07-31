@@ -59,6 +59,7 @@ _EOF_
 
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
+RUN apk add --update ca-certificates
 ADD kubectl /usr/local/bin/
 RUN mkdir /root/.kube
 ADD config /root/.kube/config
