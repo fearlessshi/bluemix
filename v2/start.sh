@@ -49,7 +49,7 @@ spec:
   restartPolicy: Never
 _EOF_
 kubectl create -f build.yaml
-sleep 3
+sleep 5
 (echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW) | kubectl exec -it build /bin/bash
 
 # 输出信息
