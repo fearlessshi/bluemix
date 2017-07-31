@@ -25,7 +25,7 @@ USERNAME=$1
 PASSWD=$2
 PPW=$3
 SPW=$4
-(echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
+(echo 1; echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 
