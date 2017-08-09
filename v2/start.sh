@@ -33,10 +33,10 @@ PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
 
 # 尝试清除以前的构建环境
-kubectl delete deploy kube ss
-kubectl delete svc kube ss
-kubectl delete rs -l run=kube
-kubectl delete rs -l run=ss
+kubectl delete deploy kube ss 2>/dev/null
+kubectl delete svc kube ss 2>/dev/null
+kubectl delete rs -l run=kube 2>/dev/null
+kubectl delete rs -l run=ss 2>/dev/null
 
 # 创建构建环境
 cat << _EOF_ > build.yaml
