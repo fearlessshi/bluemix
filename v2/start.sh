@@ -32,6 +32,10 @@ $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | gr
 PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
 
+# 尝试清除以前的构建环境
+kubectl delete deploy kube ss
+kubectl delete svc kube ss
+
 # 创建构建环境
 cat << _EOF_ > build.yaml
 apiVersion: v1
@@ -50,12 +54,13 @@ spec:
 _EOF_
 kubectl create -f build.yaml
 sleep 10
+IP=$(kubectl exec -it build curl whatismyip.akamai.com)
 (echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW) | kubectl exec -it build /bin/bash
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
 SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
-IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
+#IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/cowsay
 chmod +x cowsay
 cat << _EOF_ > default.cow
