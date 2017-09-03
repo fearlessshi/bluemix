@@ -11,7 +11,7 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
-wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/53256dc9-6ba8-4000-90e6-3350b933691c' #0.5.6
+wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/fc6fb70e-7fad-4d7b-b06f-48d2ac2b01ba' #0.5.6
 unrar x Bluemix_CLI.rar
 cd Bluemix_CLI
 chmod +x install_bluemix_cli
