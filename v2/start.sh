@@ -57,7 +57,11 @@ spec:
   restartPolicy: Never
 _EOF_
 kubectl create -f build.yaml
-sleep 20
+sleep 3
+while ! kubectl exec -it build expr 24 '*' 24 | grep -q "576"
+do
+    sleep 5
+done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
 (echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW) | kubectl exec -it build /bin/bash
 
