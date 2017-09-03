@@ -34,6 +34,7 @@ PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
 
 # 尝试清除以前的构建环境
+kubectl delete pod build 2>/dev/null
 kubectl delete deploy kube ss 2>/dev/null
 kubectl delete svc kube ss 2>/dev/null
 kubectl delete rs -l run=kube 2>/dev/null
