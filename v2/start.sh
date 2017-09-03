@@ -40,6 +40,12 @@ kubectl delete svc kube ss 2>/dev/null
 kubectl delete rs -l run=kube 2>/dev/null
 kubectl delete rs -l run=ss 2>/dev/null
 
+# 等待 build 容器停止
+while ! kubectl get pod build 2>&1 | grep -q "NotFound"
+do
+    sleep 5
+done
+
 # 创建构建环境
 cat << _EOF_ > build.yaml
 apiVersion: v1
