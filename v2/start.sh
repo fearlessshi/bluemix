@@ -14,6 +14,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/53256dc9-6ba8-4000-90e6-3350b933691c' #0.5.6
 unrar x Bluemix_CLI.rar
 cd Bluemix_CLI
+chmod +x install_bluemix_cli
 sudo ./install_bluemix_cli
 bluemix config --usage-stats-collect false
 wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1bc1657f-5979-4c96-9d13-5c1b289c84a5'
