@@ -11,13 +11,13 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
-wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/fc6fb70e-7fad-4d7b-b06f-48d2ac2b01ba' #0.5.6
+wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/c58e1f66-c849-4cd2-88fa-92a09c9d2b86' #0.6.0
 unrar x Bluemix_CLI.rar
 cd Bluemix_CLI
 chmod +x install_bluemix_cli
 sudo ./install_bluemix_cli
 bluemix config --usage-stats-collect false
-wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1bc1657f-5979-4c96-9d13-5c1b289c84a5'
+wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/63a9c180-ab62-4c29-90fb-fa33d411eb39'
 unrar x container-service-linux-amd64.rar
 bx plugin install ./container-service-linux-amd64
 
