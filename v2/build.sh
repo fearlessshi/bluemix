@@ -25,7 +25,8 @@ USERNAME=$1
 PASSWD=$2
 PPW=$3
 SPW=$4
-(echo 1; echo no) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
+REGION=$5
+(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net -u $USERNAME -p $PASSWD
 (echo 1; echo 1) | bx target --cf
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
@@ -72,14 +73,14 @@ ADD run.sh /root/
 CMD sh /root/run.sh
 _EOF_
 
-docker build -t registry.ng.bluemix.net/$NS/kube .
-while ! bx cr image-list | grep -q "registry.ng.bluemix.net/$NS/kube"
+docker build -t registry.${REGION}.bluemix.net/$NS/kube .
+while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
 do
-    docker push registry.ng.bluemix.net/$NS/kube
+    docker push registry.${REGION}.bluemix.net/$NS/kube
 done
 
 # 创建面板运行环境
-kubectl run kube --image=registry.ng.bluemix.net/$NS/kube --port=8080
+kubectl run kube --image=registry.${REGION}.bluemix.net/$NS/kube --port=8080
 kubectl expose deployment kube --type=NodePort --name=kube
 
 # 构建 SS 容器
@@ -90,14 +91,14 @@ RUN easy_install pip
 RUN pip install shadowsocks
 CMD ["ssserver","-p","443","-k","${SPW}","-m","aes-256-cfb"]
 _EOF_
-docker build -t registry.ng.bluemix.net/$NS/ss .
-while ! bx cr image-list | grep -q "registry.ng.bluemix.net/$NS/ss"
+docker build -t registry.${REGION}.bluemix.net/$NS/ss .
+while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/ss"
 do
-    docker push registry.ng.bluemix.net/$NS/ss
+    docker push registry.${REGION}.bluemix.net/$NS/ss
 done
 
 # 创建 SS 运行环境
-kubectl run ss --image=registry.ng.bluemix.net/$NS/ss --port=443
+kubectl run ss --image=registry.${REGION}.bluemix.net/$NS/ss --port=443
 kubectl expose deployment ss --type=NodePort --name=ss
 
 # 删除构建环境
