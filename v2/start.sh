@@ -8,6 +8,11 @@ function checkPara(){
     false
 }
 
+# 设定区域
+REGION=ng
+checkPara 'au' || REGION=au-syd # Sydney, Australia
+checkPara 'eu' || REGION=eu-gb # London, England
+
 # 安装 unzip
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
 chmod +x ./unrar
@@ -35,7 +40,7 @@ read USERNAME
 echo -n '请输入密码：'
 read -s PASSWD
 echo -e '\n'
-(echo 1; echo no) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
+(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net -u $USERNAME -p $PASSWD
 (echo 1; echo 1) | bx target --cf
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
@@ -78,7 +83,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW $REGION) | kubectl exec -it build /bin/bash
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
