@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 定义参数检查
+paras=$@
 function checkPara(){
     local p=$1
     for i in $paras; do if [[ $i == $p ]]; then return; fi; done
