@@ -11,7 +11,7 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
-wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/c58e1f66-c849-4cd2-88fa-92a09c9d2b86' #0.6.0
+wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/8e739b20-0b11-424a-95bf-99ec00c29c4a' #0.6.1
 unrar x Bluemix_CLI.rar
 cd Bluemix_CLI
 chmod +x install_bluemix_cli
@@ -27,7 +27,7 @@ read USERNAME
 echo -n '请输入密码：'
 read -s PASSWD
 echo -e '\n'
-(echo 1; echo 1) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
+(echo 1; echo no) | bx login -a https://api.ng.bluemix.net -u $USERNAME -p $PASSWD
 (echo 1; echo 1) | bx target --cf
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
