@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# 定义参数检查
+function checkPara(){
+    local p=$1
+    for i in $paras; do if [[ $i == $p ]]; then return; fi; done
+    false
+}
+
 # 安装 unzip
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
 chmod +x ./unrar
