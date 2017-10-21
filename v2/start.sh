@@ -10,10 +10,9 @@ function checkPara(){
 
 # 设定区域
 REGION=ng
-$(checkPara 'au') || REGION=au-syd # Sydney, Australia
-$(checkPara 'eu') || REGION=eu-gb # London, England
+$(! checkPara 'au') || REGION=au-syd # Sydney, Australia
+$(! checkPara 'eu') || REGION=eu-gb # London, England
 echo ${REGION}
-echo $paras
 exit
 
 # 安装 unzip
