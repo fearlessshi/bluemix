@@ -11,7 +11,9 @@ function checkPara(){
 # 设定区域
 REGION=ng
 checkPara 'au' && REGION=au-syd # Sydney, Australia
-checkPara 'eu' && REGION=eu-gb # London, England
+checkPara 'uk' && REGION=eu-gb # London, England
+checkPara 'de' && REGION=eu-de # Frankfurt, Germany
+
 
 # 安装 unzip
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
