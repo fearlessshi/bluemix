@@ -13,6 +13,7 @@ REGION=ng
 $(checkPara 'au') || REGION=au-syd # Sydney, Australia
 $(checkPara 'eu') || REGION=eu-gb # London, England
 echo ${REGION}
+echo $paras
 exit
 
 # 安装 unzip
