@@ -12,8 +12,6 @@ function checkPara(){
 REGION=ng
 $(! checkPara 'au') || REGION=au-syd # Sydney, Australia
 $(! checkPara 'eu') || REGION=eu-gb # London, England
-echo ${REGION}
-exit
 
 # 安装 unzip
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
