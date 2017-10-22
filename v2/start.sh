@@ -49,7 +49,7 @@ bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
-AK=$(bx iam api-key-create del_later | tail -1 | awk '{print $3}')
+AK=$(bx iam api-key-create del_later | tail -1 | awk '{print $3}' | base64)
 
 # 尝试清除以前的构建环境
 kubectl delete pod build 2>/dev/null
