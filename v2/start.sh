@@ -49,7 +49,8 @@ bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
-AK=$(bx iam api-key-create del_later | tail -1 | awk '{print $3}' | base64)
+AKN=del_$(openssl rand -base64 12 | md5sum | head -c5)
+AK=$(bx iam api-key-create $AKN | tail -1 | awk '{print $3}' | base64)
 
 # 尝试清除以前的构建环境
 kubectl delete pod build 2>/dev/null
@@ -87,7 +88,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AK $PPW $SPW $REGION) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION) | kubectl exec -it build /bin/bash
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
