@@ -22,7 +22,7 @@ bx plugin install container-service -r Bluemix
 
 # 初始化
 AKN=$1
-AK=$2
+AK=$(echo $2 | base64 -d)
 PPW=$3
 SPW=$4
 REGION=$5
