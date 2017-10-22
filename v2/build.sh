@@ -21,15 +21,17 @@ bluemix config --usage-stats-collect false
 bx plugin install container-service -r Bluemix
 
 # 初始化
-USERNAME=$1
-PASSWD=$2
+AKN=$1
+AK=$2
 PPW=$3
 SPW=$4
 REGION=$5
-(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net -u $USERNAME -p $PASSWD
+export BLUEMIX_API_KEY=$AK
+(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net
 (echo 1; echo 1) | bx target --cf
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
+bx iam api-key-delete $AKN
 
 # 初始化镜像库
 bx plugin install container-registry -r Bluemix
