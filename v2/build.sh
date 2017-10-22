@@ -34,7 +34,8 @@ $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | gr
 # 初始化镜像库
 bx plugin install container-registry -r Bluemix
 bx cr login
-NS=$(openssl rand -base64 16 | md5sum | head -c16)
+for name in $(bx cr namespace-list | grep del_); do (echo y) | bx cr namespace-rm $name; done
+NS=del_$(openssl rand -base64 16 | md5sum | head -c16)
 bx cr namespace-add $NS
 
 # 构建面板容器
