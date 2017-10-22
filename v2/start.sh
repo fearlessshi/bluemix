@@ -37,17 +37,20 @@ unrar x container-service-linux-amd64.rar
 bx plugin install ./container-service-linux-amd64
 
 # 初始化
-echo -e -n "\n请输入用户名："
-read USERNAME
-echo -n '请输入密码：'
-read -s PASSWD
-echo -e '\n'
-(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net -u $USERNAME -p $PASSWD
+#echo -e -n "\n请输入用户名："
+#read USERNAME
+#echo -n '请输入密码：'
+#read -s PASSWD
+#echo -e '\n'
+#(echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net -u $USERNAME -p $PASSWD
+bx login -a https://api.${REGION}.bluemix.net
 (echo 1; echo 1) | bx target --cf
 bx cs init
 $(bx cs cluster-config $(bx cs clusters | grep 'normal' | awk '{print $1}') | grep 'export')
 PPW=$(openssl rand -base64 12 | md5sum | head -c12)
 SPW=$(openssl rand -base64 12 | md5sum | head -c12)
+AKN=del_$(openssl rand -base64 12 | md5sum | head -c4)
+AK=$(bx iam api-key-create $AKN)
 
 # 尝试清除以前的构建环境
 kubectl delete pod build 2>/dev/null
@@ -85,7 +88,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $USERNAME $PASSWD $PPW $SPW $REGION) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION) | kubectl exec -it build /bin/bash
 
 # 输出信息
 PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
