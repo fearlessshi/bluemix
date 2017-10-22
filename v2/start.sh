@@ -82,7 +82,7 @@ spec:
 _EOF_
 kubectl create -f build.yaml
 sleep 3
-while ! kubectl exec -it build expr 24 '*' 24 | grep -q "576"
+while ! kubectl exec -it build expr 24 '*' 24 2>/dev/null | grep -q "576"
 do
     sleep 5
 done
