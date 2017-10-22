@@ -21,7 +21,7 @@ bluemix config --usage-stats-collect false
 bx plugin install container-service -r Bluemix
 
 # 初始化
-AK=$1
+AK=$(echo $1 | base64 -d)
 PPW=$2
 SPW=$3
 REGION=$4
