@@ -53,7 +53,7 @@ chmod +x ./caddy
 cp /usr/local/bin/kubectl ./
 
 cat << _EOF_ > Caddyfile
-0.0.0.0:8080
+0.0.0.0:80
 gzip
 proxy /$PPW/ 127.0.0.1:8001
 _EOF_
