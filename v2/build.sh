@@ -26,6 +26,7 @@ AK=$(echo $2 | base64 -d)
 PPW=$3
 SPW=$4
 REGION=$5
+IP=$6
 export BLUEMIX_API_KEY=$AK
 (echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net
 (echo 1; echo 1) | bx target --cf
@@ -83,8 +84,8 @@ do
 done
 
 # 创建面板运行环境
-kubectl run kube --image=registry.${REGION}.bluemix.net/$NS/kube --port=8080
-kubectl expose deployment kube --type=NodePort --name=kube
+kubectl run kube --image=registry.${REGION}.bluemix.net/$NS/kube --port=80
+kubectl expose deployment kube --type=LoadBalancer --name=kube --external-ip $IP
 
 # 构建 SS 容器
 cat << _EOF_ >Dockerfile
@@ -102,7 +103,7 @@ done
 
 # 创建 SS 运行环境
 kubectl run ss --image=registry.${REGION}.bluemix.net/$NS/ss --port=443
-kubectl expose deployment ss --type=NodePort --name=ss
+kubectl expose deployment ss --type=LoadBalancer --name=ss --external-ip $IP
 
 # 删除构建环境
 kubectl delete pod build
