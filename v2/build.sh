@@ -103,7 +103,8 @@ done
 
 # 创建 SS 运行环境
 kubectl run ss --image=registry.${REGION}.bluemix.net/$NS/ss --port=443
-kubectl expose deployment ss --type=LoadBalancer --name=ss --external-ip $IP
+kubectl expose deployment ss --type=LoadBalancer --name=ss-tcp --external-ip $IP
+kubectl expose deployment ss --type=LoadBalancer --name=ss-udp --external-ip $IP --protocol="UDP"
 
 # 删除构建环境
 kubectl delete pod build
