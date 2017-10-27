@@ -89,11 +89,10 @@ kubectl expose deployment kube --type=LoadBalancer --name=kube --external-ip $IP
 
 # 构建 SS 容器
 cat << _EOF_ >Dockerfile
-FROM centos:centos7
-RUN yum install python-setuptools -y
-RUN easy_install pip
-RUN pip install shadowsocks
-CMD ["ssserver","-p","443","-k","${SPW}","-m","aes-256-cfb"]
+FROM easypi/shadowsocks-libev
+ENV SERVER_PORT 443
+ENV METHOD aes-256-cfb
+ENV PASSWORD $SPW
 _EOF_
 docker build -t registry.${REGION}.bluemix.net/$NS/ss .
 while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/ss"
