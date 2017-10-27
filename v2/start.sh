@@ -91,8 +91,9 @@ IP=$(kubectl exec -it build curl whatismyip.akamai.com)
 (echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP) | kubectl exec -it build /bin/bash
 
 # 输出信息
-PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
-SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
+#PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
+#SP=$(kubectl get svc ss -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
+SP=443
 #IP=$(kubectl get node -o=custom-columns=Port:.metadata.name | tail -n1)
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/cowsay
 chmod +x cowsay
@@ -109,7 +110,7 @@ clear
 echo
 ./cowsay -f ./default.cow 惊不惊喜，意不意外
 echo 
-echo ' 管理面板地址: ' http://$IP:$PP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
+echo ' 管理面板地址: ' http://$IP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
 echo 
 echo ' SS:'
 echo '  IP: '$IP
