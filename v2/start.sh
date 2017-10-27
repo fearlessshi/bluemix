@@ -55,7 +55,7 @@ AK=$(bx iam api-key-create $AKN | tail -1 | awk '{print $3}' | base64)
 # 尝试清除以前的构建环境
 kubectl delete pod build 2>/dev/null
 kubectl delete deploy kube ss 2>/dev/null
-kubectl delete svc kube ss-tcp ss-udp 2>/dev/null
+kubectl delete svc kube ss ss-tcp ss-udp 2>/dev/null
 kubectl delete rs -l run=kube | grep 'deleted' --color=never
 kubectl delete rs -l run=ss | grep 'deleted' --color=never
 
