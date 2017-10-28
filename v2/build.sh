@@ -133,7 +133,7 @@ _EOF_
 # 创建 SS 运行环境
 kubectl run ss --image=registry.${REGION}.bluemix.net/$NS/ss --port=443
 if $BBR; then
-    kubectl expose deployment ss --type=NodePort --name=ss
+    kubectl expose deployment ss --name=ss
     sed -i "s/SS_IP/$(kubectl get svc ss -o=custom-columns=IP:.spec.clusterIP | tail -n1)/g" bbr.yaml
     kubectl create -f bbr.yaml
     kubectl expose deployment bbr --type=LoadBalancer --port=443 --name=ss-tcp --external-ip $IP
