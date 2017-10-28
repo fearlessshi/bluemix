@@ -27,6 +27,7 @@ PPW=$3
 SPW=$4
 REGION=$5
 IP=$6
+BBR=$7
 export BLUEMIX_API_KEY=$AK
 (echo 1; echo no) | bx login -a https://api.${REGION}.bluemix.net
 (echo 1; echo 1) | bx target --cf
@@ -100,9 +101,45 @@ do
     docker push registry.${REGION}.bluemix.net/$NS/ss
 done
 
+# 创建 BBR 构建文件
+cat << _EOF_ > bbr.yaml
+apiVersion: v1                                                                                                                  
+kind: Deployment                                                                                                                                  
+metadata:                                                                                                                                         
+  labels:                                                                                                                                         
+    app: bbr                                                                                                                                      
+  name: bbr                                                                                                                                       
+spec:                                                                                                                                             
+  replicas: 1                                                                                                                                     
+  selector:                                                                                                                                       
+    matchLabels:                                                                                                                                  
+      app: bbr                                                                                                                                    
+    spec:                                                                                                                                         
+      containers:                                                                                                                                 
+      - env:                                                                                                                                      
+        - name: TARGET_HOST                                                                                                                       
+          value: SS_IP
+        - name: TARGET_PORT                                                                                                                       
+          value: "443"
+        - name: BIND_PORT
+          value: "443"
+        image: wuqz/lkl:latest                                                                                                                    
+        name: bbr                                                                                                                                 
+        securityContext:                                                                                                                          
+          privileged: true                                                                                                                        
+      restartPolicy: Always                                                                                                                       
+_EOF_
+
 # 创建 SS 运行环境
 kubectl run ss --image=registry.${REGION}.bluemix.net/$NS/ss --port=443
-kubectl expose deployment ss --type=LoadBalancer --name=ss-tcp --external-ip $IP
+if $BBR; then
+    kubectl expose deployment ss --type=NodePort --name=ss
+    sed -i "s/SS_IP/$(kubectl get svc ss -o=custom-columns=IP:.spec.clusterIP | tail -n1)/g" bbr.yaml
+    kubectl build -f bbr.yaml
+    kubectl expose deployment bbr --type=LoadBalancer --port=443 --name=ss-tcp --external-ip $IP
+else
+    kubectl expose deployment ss --type=LoadBalancer --name=ss-tcp --external-ip $IP
+fi
 kubectl expose deployment ss --type=LoadBalancer --name=ss-udp --external-ip $IP --protocol="UDP"
 
 # 删除构建环境
