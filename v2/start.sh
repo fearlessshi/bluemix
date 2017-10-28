@@ -14,6 +14,9 @@ checkPara 'au' && REGION=au-syd # Sydney, Australia
 checkPara 'uk' && REGION=eu-gb # London, England
 checkPara 'de' && REGION=eu-de # Frankfurt, Germany
 
+# 检查 BBR 参数
+BBR=false
+checkPara 'bbr' && BBR=true
 
 # 安装 unzip
 wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
@@ -88,7 +91,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP) | kubectl exec -it build /bin/bash
+(echo curl -LOs 'https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
 
 # 输出信息
 #PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
