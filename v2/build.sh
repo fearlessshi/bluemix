@@ -103,31 +103,31 @@ done
 
 # 创建 BBR 构建文件
 cat << _EOF_ > bbr.yaml
-apiVersion: v1                                                                                                                  
-kind: Deployment                                                                                                                                  
-metadata:                                                                                                                                         
-  labels:                                                                                                                                         
-    app: bbr                                                                                                                                      
-  name: bbr                                                                                                                                       
-spec:                                                                                                                                             
-  replicas: 1                                                                                                                                     
-  selector:                                                                                                                                       
-    matchLabels:                                                                                                                                  
-      app: bbr                                                                                                                                    
-    spec:                                                                                                                                         
-      containers:                                                                                                                                 
-      - env:                                                                                                                                      
-        - name: TARGET_HOST                                                                                                                       
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: bbr 
+  name: bbr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bbr
+    spec:
+      containers:
+      - env:
+        - name: TARGET_HOST
           value: SS_IP
-        - name: TARGET_PORT                                                                                                                       
+        - name: TARGET_PORT
           value: "443"
         - name: BIND_PORT
           value: "443"
-        image: wuqz/lkl:latest                                                                                                                    
-        name: bbr                                                                                                                                 
-        securityContext:                                                                                                                          
-          privileged: true                                                                                                                        
-      restartPolicy: Always                                                                                                                       
+        image: wuqz/lkl:latest
+        name: bbr
+        securityContext:
+          privileged: true
+      restartPolicy: Always
 _EOF_
 
 # 创建 SS 运行环境
