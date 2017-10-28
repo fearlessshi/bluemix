@@ -114,6 +114,11 @@ spec:
   selector:
     matchLabels:
       app: bbr
+  template:
+    metadata:
+      labels:
+        app: bbr
+      name: bbr
     spec:
       containers:
       - env:
