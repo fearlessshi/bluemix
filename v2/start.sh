@@ -61,7 +61,6 @@ kubectl delete rs -l run=kube | grep 'deleted' --color=never
 kubectl delete rs -l run=ss | grep 'deleted' --color=never
 kubectl delete rs -l run=bbr | grep 'deleted' --color=never
 
-
 # 等待 build 容器停止
 while ! kubectl get pod build 2>&1 | grep -q "NotFound"
 do
