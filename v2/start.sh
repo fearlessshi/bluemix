@@ -28,16 +28,14 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.7.2/bin/li
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
+
 # 安装 Bluemix CLI 及插件
-wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/8e739b20-0b11-424a-95bf-99ec00c29c4a' #0.6.1
-unrar x Bluemix_CLI.rar
+wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.5/linux64'
+tar -zxf Bluemix_CLI_amd64.tar.gz
 cd Bluemix_CLI
-chmod +x install_bluemix_cli
-sudo ./install_bluemix_cli
+./install_bluemix_cli
 bluemix config --usage-stats-collect false
-wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/63a9c180-ab62-4c29-90fb-fa33d411eb39'
-unrar x container-service-linux-amd64.rar
-bx plugin install ./container-service-linux-amd64
+bx plugin install container-service -r Bluemix
 
 # 初始化
 #echo -e -n "\n请输入用户名："
