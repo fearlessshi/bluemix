@@ -42,28 +42,7 @@ for name in $(bx cr namespace-list | grep del_); do (echo y) | bx cr namespace-r
 NS=del_$(openssl rand -base64 16 | md5sum | head -c16)
 bx cr namespace-add $NS
 
-# 构建面板容器
-cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
-cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
-PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
 
-wget -O caddy.tar.gz https://caddyserver.com/download/linux/amd64
-tar -zxf caddy.tar.gz
-chmod +x ./caddy
-
-cp /usr/local/bin/kubectl ./
-
-
-
-docker build -t registry.${REGION}.bluemix.net/$NS/kube .
-while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
-do
-    docker push registry.${REGION}.bluemix.net/$NS/kube
-done
-
-# 创建面板运行环境
-kubectl run kube --image=registry.${REGION}.bluemix.net/$NS/kube --port=80
-kubectl expose deployment kube --type=LoadBalancer --name=kube --external-ip $IP
 
 # 构建 SS 容器
 cat << _EOF_ >Dockerfile
