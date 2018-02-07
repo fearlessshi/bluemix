@@ -78,10 +78,10 @@ ADD run.sh /root/
 CMD sh /root/run.sh
 _EOF_
 
-docker build -t registry.${REGION}.bluemix.net/$NS/kube .
+docker build -t USERNAME/registry.${REGION}.bluemix.net/$NS/kube .
 while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
 do
-    docker push registry.${REGION}.bluemix.net/$NS/kube
+    docker push USERNAME/registry.${REGION}.bluemix.net/$NS/kube
 done
 
 # 创建面板运行环境
