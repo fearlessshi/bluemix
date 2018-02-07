@@ -41,13 +41,16 @@ bx cr login
 for name in $(bx cr namespace-list | grep del_); do (echo y) | bx cr namespace-rm $name; done
 NS=del_$(openssl rand -base64 16 | md5sum | head -c16)
 bx cr namespace-add $NS
+
 # 构建面板容器
 cp /root/.bluemix/plugins/container-service/clusters/*/*.yml ./config
 cp /root/.bluemix/plugins/container-service/clusters/*/*.pem ./
 PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
+
 wget -O caddy.tar.gz https://caddyserver.com/download/linux/amd64
 tar -zxf caddy.tar.gz
 chmod +x ./caddy
+
 cp /usr/local/bin/kubectl ./
 
 cat << _EOF_ > Caddyfile
@@ -55,10 +58,12 @@ cat << _EOF_ > Caddyfile
 gzip
 proxy /$PPW/ 127.0.0.1:8001
 _EOF_
+
 cat << _EOF_ > run.sh
 kubectl proxy --accept-hosts '.*' --api-prefix=/$PPW/ &
 caddy -conf /etc/caddy/Caddyfile
 _EOF_
+
 cat << _EOF_ > Dockerfile
 FROM alpine:latest
 RUN apk add --update ca-certificates
@@ -72,12 +77,16 @@ ADD Caddyfile /etc/caddy/
 ADD run.sh /root/
 CMD sh /root/run.sh
 _EOF_
+
 docker build -t registry.${REGION}.bluemix.net/$NS/kube .
+while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
+do
+    sudo docker push registry.${REGION}.bluemix.net/$NS/kube
+done
 
 # 创建面板运行环境
 kubectl run kube --image=registry.${REGION}.bluemix.net/$NS/kube --port=80
 kubectl expose deployment kube --type=LoadBalancer --name=kube --external-ip $IP
-
 
 # 构建 SS 容器
 cat << _EOF_ >Dockerfile
