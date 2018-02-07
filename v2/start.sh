@@ -78,7 +78,7 @@ metadata:
 spec:
   containers:
   - name: centos
-    image: centos:centos6.9
+    image: centos:latest
     command: ["sleep"]
     args: ["1800"]
     securityContext:
