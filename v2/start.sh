@@ -18,16 +18,17 @@ checkPara 'de' && REGION=eu-de # Frankfurt, Germany
 BBR=false
 checkPara 'bbr' && BBR=true
 
-# 安装 unzip
-wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
-chmod +x ./unrar
-sudo mv ./unrar /usr/bin/
+# 安装 unrar
+#wget https://coding.net/u/tprss/p/bluemix-source/git/raw/master/v2/unrar
+#chmod +x ./unrar
+#sudo mv ./unrar /usr/bin/
 
 # 安装 kubectl
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.7.2/bin/linux/amd64/kubectl
+#wget -O kubectl.rar 'http://detect-10000037.image.myqcloud.com/5c964783-429d-4e31-a286-6580c97d4ac1'
+#unrar x kubectl.rar
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
-
 
 # 安装 Bluemix CLI 及插件
 wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.5/linux64'
@@ -61,6 +62,7 @@ kubectl delete rs -l run=kube | grep 'deleted' --color=never
 kubectl delete rs -l run=ss | grep 'deleted' --color=never
 kubectl delete rs -l run=bbr | grep 'deleted' --color=never
 
+
 # 等待 build 容器停止
 while ! kubectl get pod build 2>&1 | grep -q "NotFound"
 do
@@ -90,7 +92,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -LOs 'https://coding.net/u/shiggg/p/bluemix-ss/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
+(echo curl -Lso build.sh 'https://coding.net/u/shiggg/p/bluemix-ss/git/raw/master/v2/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
 
 # 输出信息
 #PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
@@ -123,4 +125,4 @@ ADDR='ss://'$(echo -n "aes-256-cfb:$SPW@$IP:$SP" | base64)
 echo 
 echo '  快速添加: '$ADDR
 echo '  二维码: http://qr.liantu.com/api.php?text='$ADDR
-echo 
+echo
