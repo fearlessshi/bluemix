@@ -95,10 +95,10 @@ ENV SERVER_PORT 443
 ENV METHOD aes-256-cfb
 ENV PASSWORD $SPW
 _EOF_
-docker build -t registry.${REGION}.bluemix.net/$NS/ss:latest .
+docker build -t root/registry.${REGION}.bluemix.net/$NS/ss:latest .
 while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/ss:latest"
 do
-    docker push registry.${REGION}.bluemix.net/$NS/ss:latest
+    docker push root/registry.${REGION}.bluemix.net/$NS/ss:latest
 done
 
 # 创建 BBR 构建文件
