@@ -78,10 +78,10 @@ ADD run.sh /root/
 CMD sh /root/run.sh
 _EOF_
 
-docker build -t USERNAME/registry.${REGION}.bluemix.net/$NS/kube .
-while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
+docker build -t root/registry.${REGION}.bluemix.net/$NS/kube:latest .
+while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube:latest"
 do
-    docker push USERNAME/registry.${REGION}.bluemix.net/$NS/kube
+    docker push root/registry.${REGION}.bluemix.net/$NS/kube:latest
 done
 
 # 创建面板运行环境
@@ -95,10 +95,10 @@ ENV SERVER_PORT 443
 ENV METHOD aes-256-cfb
 ENV PASSWORD $SPW
 _EOF_
-docker build -t registry.${REGION}.bluemix.net/$NS/ss .
-while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/ss"
+docker build -t registry.${REGION}.bluemix.net/$NS/ss:latest .
+while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/ss:latest"
 do
-    sudo docker push registry.${REGION}.bluemix.net/$NS/ss
+    docker push registry.${REGION}.bluemix.net/$NS/ss:latest
 done
 
 # 创建 BBR 构建文件
