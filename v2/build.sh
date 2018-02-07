@@ -13,7 +13,7 @@ chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
-wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.1/linux64'
+wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.2/linux64'
 tar -zxf Bluemix_CLI_amd64.tar.gz
 cd Bluemix_CLI
 ./install_bluemix_cli
@@ -53,30 +53,7 @@ chmod +x ./caddy
 
 cp /usr/local/bin/kubectl ./
 
-cat << _EOF_ > Caddyfile
-0.0.0.0:80
-gzip
-proxy /$PPW/ 127.0.0.1:8001
-_EOF_
 
-cat << _EOF_ > run.sh
-kubectl proxy --accept-hosts '.*' --api-prefix=/$PPW/ &
-caddy -conf /etc/caddy/Caddyfile
-_EOF_
-
-cat << _EOF_ > Dockerfile
-FROM alpine:latest
-RUN apk add --update ca-certificates
-ADD kubectl /usr/local/bin/
-RUN mkdir /root/.kube
-ADD config /root/.kube/config
-ADD $PEM /root/.kube/
-ADD caddy /usr/local/bin/
-RUN mkdir /etc/caddy
-ADD Caddyfile /etc/caddy/
-ADD run.sh /root/
-CMD sh /root/run.sh
-_EOF_
 
 docker build -t registry.${REGION}.bluemix.net/$NS/kube .
 while ! bx cr image-list | grep -q "registry.${REGION}.bluemix.net/$NS/kube"
