@@ -92,7 +92,7 @@ do
     sleep 5
 done
 IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -Lso build.sh 'https://gist.githubusercontent.com/fearlessshi/0f9180783755b3576507334c25237116/raw/94754a2281802778659370e377987b28ccddbd85/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
+(echo curl -Lso build.sh 'https://gist.githubusercontent.com/fearlessshi/0f9180783755b3576507334c25237116/raw/5d5895a4bddd7809c22c6e8573538ef16bad817c/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
 
 # 输出信息
 #PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
