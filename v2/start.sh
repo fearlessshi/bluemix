@@ -105,7 +105,7 @@ PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
 kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.yml build:/root/config
 kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.pem build:/root/"$PEM"
 (echo 'apk add --update curl ca-certificates openssl'; \
-    echo wget -O build.sh 'https://gist.githubusercontent.com/anonymous/dcc43cd069ad77453768f8505f73c836/raw/e930391795ea1c7af36306b098285bb12ebc89c4/build.sh'; \
+    echo wget -O build.sh 'https://gist.githubusercontent.com/fearlessshi/02be46f46b629894dee7054ce4b54bf8/raw/a687df706e1567c0327438eb85c4e4e5d22ca984/bulid.txt'; \
     echo sh build.sh "$AKN" "$AK" "$PPW" "$SPW" "$REGION" "$IP" "$BBR" "$PEM") | kubectl exec -it build sh
 
 # 输出信息
