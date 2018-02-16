@@ -40,7 +40,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 #wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1eb05dc4-d8ba-4347-b932-30558134d9ee'
 #unrar x container-service-linux-amd64.rar
 #bx plugin install ./container-service-linux-amd64
-wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.2/linux64'
+wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.5/linux64'
 tar -zxf Bluemix_CLI_amd64.tar.gz
 cd Bluemix_CLI
 sudo ./install_bluemix_cli
@@ -86,8 +86,8 @@ metadata:
   name: build
 spec:
   containers:
-  - name: centos
-    image: centos:centos7
+  - name: alpine
+    image: docker:dind
     command: ["sleep"]
     args: ["1800"]
     securityContext:
@@ -100,8 +100,13 @@ while ! kubectl exec -it build expr 24 '*' 24 2>/dev/null | grep -q "576"
 do
     sleep 5
 done
-IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -Lso build.sh 'https://coding.net/u/shiggg/p/bluemix-ss/git/raw/master/v2/buildbbr.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
+IP=$(kubectl exec -it build -- wget -qO- whatismyip.akamai.com)
+PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
+kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.yml build:/root/config
+kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.pem build:/root/"$PEM"
+(echo 'apk add --update curl ca-certificates openssl'; \
+    echo wget -O build.sh 'https://gist.githubusercontent.com/anonymous/dcc43cd069ad77453768f8505f73c836/raw/e930391795ea1c7af36306b098285bb12ebc89c4/build.sh'; \
+    echo sh build.sh "$AKN" "$AK" "$PPW" "$SPW" "$REGION" "$IP" "$BBR" "$PEM") | kubectl exec -it build sh
 
 # 输出信息
 #PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
@@ -123,7 +128,7 @@ clear
 echo
 ./cowsay -f ./default.cow 惊不惊喜，意不意外
 echo 
-echo ' 管理面板地址: ' http://$IP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
+echo ' 管理面板地址: ' http://$IP/$PPW/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 echo 
 echo ' SS:'
 echo '  IP: '$IP
