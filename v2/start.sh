@@ -31,10 +31,19 @@ chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
 
 # 安装 Bluemix CLI 及插件
+#wget -O Bluemix_CLI.rar 'http://detect-10000037.image.myqcloud.com/8e739b20-0b11-424a-95bf-99ec00c29c4a' #0.6.1
+#unrar x Bluemix_CLI.rar
+#cd Bluemix_CLI
+#chmod +x install_bluemix_cli
+#sudo ./install_bluemix_cli
+#bluemix config --usage-stats-collect false
+#wget -O container-service-linux-amd64.rar 'http://detect-10000037.image.myqcloud.com/1eb05dc4-d8ba-4347-b932-30558134d9ee'
+#unrar x container-service-linux-amd64.rar
+#bx plugin install ./container-service-linux-amd64
 wget -O Bluemix_CLI_amd64.tar.gz 'https://plugins.ng.bluemix.net/download/bluemix-cli/0.6.5/linux64'
 tar -zxf Bluemix_CLI_amd64.tar.gz
 cd Bluemix_CLI
-./install_bluemix_cli
+sudo ./install_bluemix_cli
 bluemix config --usage-stats-collect false
 bx plugin install container-service -r Bluemix
 
@@ -77,8 +86,8 @@ metadata:
   name: build
 spec:
   containers:
-  - name: centos
-    image: centos:latest
+  - name: alpine
+    image: docker:dind
     command: ["sleep"]
     args: ["1800"]
     securityContext:
@@ -91,8 +100,13 @@ while ! kubectl exec -it build expr 24 '*' 24 2>/dev/null | grep -q "576"
 do
     sleep 5
 done
-IP=$(kubectl exec -it build curl whatismyip.akamai.com)
-(echo curl -Lso build.sh 'https://gist.githubusercontent.com/fearlessshi/0f9180783755b3576507334c25237116/raw/5d5895a4bddd7809c22c6e8573538ef16bad817c/build.sh'; echo bash build.sh $AKN $AK $PPW $SPW $REGION $IP $BBR) | kubectl exec -it build /bin/bash
+IP=$(kubectl exec -it build -- wget -qO- whatismyip.akamai.com)
+PEM=$(basename $(ls /root/.bluemix/plugins/container-service/clusters/*/*.pem))
+kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.yml build:/root/config
+kubectl cp /root/.bluemix/plugins/container-service/clusters/*/*.pem build:/root/"$PEM"
+(echo 'apk add --update curl ca-certificates openssl'; \
+    echo wget -O build.sh 'https://gist.githubusercontent.com/anonymous/dcc43cd069ad77453768f8505f73c836/raw/e930391795ea1c7af36306b098285bb12ebc89c4/build.sh'; \
+    echo sh build.sh "$AKN" "$AK" "$PPW" "$SPW" "$REGION" "$IP" "$BBR" "$PEM") | kubectl exec -it build sh
 
 # 输出信息
 #PP=$(kubectl get svc kube -o=custom-columns=Port:.spec.ports\[\*\].nodePort | tail -n1)
@@ -114,7 +128,7 @@ clear
 echo
 ./cowsay -f ./default.cow 惊不惊喜，意不意外
 echo 
-echo ' 管理面板地址: ' http://$IP/$PPW/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/
+echo ' 管理面板地址: ' http://$IP/$PPW/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 echo 
 echo ' SS:'
 echo '  IP: '$IP
@@ -125,4 +139,4 @@ ADDR='ss://'$(echo -n "aes-256-cfb:$SPW@$IP:$SP" | base64)
 echo 
 echo '  快速添加: '$ADDR
 echo '  二维码: http://qr.liantu.com/api.php?text='$ADDR
-echo
+echo 
