@@ -1,7 +1,10 @@
 # bluemix-source
-# 安装 SS
-创建：bash <(curl -Ls https://coding.net/u/jogolor/p/bluemix-source/git/raw/master/v2/admin.sh)
 
+# 只能参考
+https://blog.feixueacg.com/bluemix-stop-docker/
+# 安装 SS失败
+
+创建：bash <(curl -Ls https://coding.net/u/jogolor/p/bluemix-source/git/raw/master/v2/admin.sh)
 删除：bash <(curl -Ls https://coding.net/u/jogolor/p/bluemix-source/git/raw/master/v2/admin.sh) del
 
 默认区域为美国南部。创建悉尼的Permissive RBAC Permissions，应加参数 au；删除悉尼的Permissive RBAC Permissions，应加参数 au del。其他区域，依此类推。
